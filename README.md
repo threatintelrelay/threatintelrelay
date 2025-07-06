@@ -1,1 +1,1 @@
-# threatintelrelay
+# ThreatIntelRelay
