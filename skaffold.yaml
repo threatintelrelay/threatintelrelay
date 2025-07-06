@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta10
+kind: Config
+metadata:
+  name: threatintelrelay
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+    - image: localhost:5000/threatintelrelay
+      context: src/api
+  local:
+    push: true
+deploy:
+  helm:
+    releases:
+      - name: threatintelrelay
+        chartPath: deployment/helm/threatintelrelay-chart
+        namespace: default
+        valuesFiles:
+          - deployment/helm/threatintelrelay-chart/values.yaml
+        setValues:
+          image.repository: localhost:5000/threatintelrelay
+        setValueTemplates:
+          image.tag: "{{.DIGEST}}"
