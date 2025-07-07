@@ -1,4 +1,3 @@
-# GitHub Actions workflow for CI/CD with FastAPI, Docker, Helm, and Argo CD
 name: CI/CD
 
 on:

@@ -38,7 +38,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/
+          PYTHONPATH=src pytest tests/
 
       - name: Stop and remove container
         if: always()
