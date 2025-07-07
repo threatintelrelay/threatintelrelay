@@ -34,11 +34,11 @@ jobs:
 
       - name: Install test dependencies
         run: |
-          docker exec -w /app fastapi-test pip install --no-cache-dir -r test-requirements.txt
+          docker exec fastapi-test pip install --no-cache-dir -r test-requirements.txt
 
       - name: Run tests in Docker container
         run: |
-          docker exec -w /app fastapi-test python -m pytest tests
+          docker exec fastapi-test pytest tests
 
       - name: Stop and remove container
         if: always()
