@@ -36,9 +36,9 @@ jobs:
         run: |
           pip install pytest pytest-asyncio httpx
 
-      - name: Run tests
+      - name: Run tests in Docker container
         run: |
-          PYTHONPATH=src pytest tests/
+          pytest /app/tests
 
       - name: Stop and remove container
         if: always()
