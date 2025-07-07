@@ -8,7 +8,7 @@ export default defineConfig({
                starlight({
                        title: 'ThreatIntelRelay Docs',
                        social: [
-                               { icon: 'github', label: 'GitHub', href: 'https://github.com/YOUR_GITHUB_USERNAME/threatintelrelay' },
+                               { icon: 'github', label: 'GitHub', href: 'https://github.com/threatintelrelay/threatintelrelay' },
                        ],
                        sidebar: [
                                {
