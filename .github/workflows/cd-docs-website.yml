@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          cache: false   # disable the built-in cache
 
       - name: Cache website deps
         uses: actions/cache@v3
