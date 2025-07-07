@@ -61,12 +61,6 @@ jobs:
         with:
           version: 'latest'
 
-      # --- Add required Helm repositories ---
-      - name: Add Helm repositories
-        run: |
-          helm repo add kong https://charts.konghq.com
-          helm repo update
-
       # --- make Skaffold load images directly into Kind rather than push/pull ---
       - name: Enable Skaffold “local-cluster” mode
         run: skaffold config set --global local-cluster true
