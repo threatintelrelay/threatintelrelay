@@ -1,36 +1,33 @@
 ---
-title: Welcome to Starlight (actually ThreatIntelRelay, just using this to bootstrap my docs)
-description: Get started building your docs site with Starlight.
+title: ThreatIntelRelay
+description: Access multiple OSINT threat feeds through an MCP server.
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: Aggregating OSINT feeds with a unified MCP API
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Quickstart
+      link: /guides/quickstart/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: GitHub
+      link: https://github.com/threatintelrelay/threatintelrelay
       icon: external
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+ThreatIntelRelay consolidates multiple open-source threat feeds and exposes them through a single MCP-compatible API. The service is deployed on Kubernetes and uses FastAPI for its HTTP interface.
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card title="Quickstart" icon="rocket">
+    Learn how to run the project locally in the [Quickstart guide](/guides/quickstart/).
+  </Card>
+  <Card title="Stack Overview" icon="layers">
+    Explore the technologies used in [the stack reference](/reference/stack/).
+  </Card>
+  <Card title="Browse the code" icon="github">
+    View the project on [GitHub](https://github.com/threatintelrelay/threatintelrelay).
+  </Card>
 </CardGrid>
