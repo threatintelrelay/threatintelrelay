@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t threatintelrelay-api:ci ./src/api
+
+      - name: Run FastAPI container
+        run: |
+          docker run -d --name fastapi-test -p 8000:8000 threatintelrelay-api:ci
+
+      - name: Wait for FastAPI to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:8000/ > /dev/null; then
+              echo "FastAPI is up!"
+              break
+            fi
+            echo "Waiting for FastAPI..."
+            sleep 2
+          done
+
+      - name: Install test dependencies
+        run: |
+          pip install pytest pytest-asyncio httpx
+
+      - name: Run tests
+        run: |
+          pytest tests/
+
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop fastapi-test
+          docker rm fastapi-test

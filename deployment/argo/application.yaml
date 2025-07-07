@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: threatintelrelay
+  namespace: argocd # Change if your Argo CD uses a different namespace
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/YOUR_GITHUB_USERNAME/threatintelrelay'
+    targetRevision: main
+    path: deployment/helm/threatintelrelay
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

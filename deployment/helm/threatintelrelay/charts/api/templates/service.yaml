@@ -3,7 +3,8 @@ kind: Service
 metadata:
   name: {{ include "api.fullname" . }}
   labels:
-    app: api
+    app: {{ include "api.name" . }}
+    release: {{ .Release.Name }}
 spec:
   type: ClusterIP
   ports:
@@ -12,4 +13,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: api
+    app: {{ include "api.name" . }}
+    release: {{ .Release.Name }}

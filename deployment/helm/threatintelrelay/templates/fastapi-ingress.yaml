@@ -5,6 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "kong"
 spec:
+  ingressClassName: kong
   rules:
     - http:
         paths:
@@ -12,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: api
+                name: {{ include "api.fullname" . }}
                 port:
                   number: 80
