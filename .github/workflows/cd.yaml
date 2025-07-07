@@ -1,12 +1,8 @@
 name: CD-images
 
 on:
-  workflow_run:
-    workflows: ["CI-releases"]
-    types:
-      - completed
-    branches:
-      - main
+  push:
+    branches: [ "*" ]
 
 jobs:
   build-test-push:
