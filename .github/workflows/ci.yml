@@ -20,6 +20,7 @@ jobs:
 
       - name: Install test dependencies
         run: |
+          pip install -r src/api/requirements.txt
           pip install -r src/api/test-requirements.txt
 
       - name: Run fastAPI unit tests
