@@ -1,0 +1,9 @@
+dependencies:
+- name: api
+  repository: file://charts/api
+  version: 0.1.0
+- name: kong
+  repository: https://charts.konghq.com
+  version: 2.37.0
+digest: sha256:4c11cb3699d290cf06d62841b38ad3e8ba2903ee37ecfb4acf1a950a01f98a7a
+generated: "2025-07-06T22:48:28.490325573-07:00"

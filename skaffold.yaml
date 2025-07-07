@@ -4,21 +4,25 @@ metadata:
   name: threatintelrelay
 build:
   tagPolicy:
-    sha256: {}
+    gitCommit: {}
   artifacts:
-    - image: localhost:5000/threatintelrelay
+    - image: localhost:5000/threatintelrelay-api
       context: src/api
+      docker:
+        dockerfile: Dockerfile
   local:
-    push: true
+    push: false
 deploy:
   helm:
     releases:
       - name: threatintelrelay
-        chartPath: deployment/helm/threatintelrelay-chart
+        chartPath: deployment/helm/threatintelrelay
         namespace: default
         valuesFiles:
-          - deployment/helm/threatintelrelay-chart/values.yaml
-        setValues:
-          image.repository: localhost:5000/threatintelrelay
+          - deployment/helm/threatintelrelay/charts/api/values.yaml
+          - deployment/helm/threatintelrelay/values.yaml
         setValueTemplates:
-          image.tag: "{{.DIGEST}}"
+          api.image.repository: "{{.IMAGE_REPO_localhost_5000_threatintelrelay_api}}"
+          api.image.tag: "{{.IMAGE_TAG_localhost_5000_threatintelrelay_api}}"
+        setValues:
+          api.image.pullPolicy: "IfNotPresent"
