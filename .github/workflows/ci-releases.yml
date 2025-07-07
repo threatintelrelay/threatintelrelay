@@ -45,7 +45,7 @@ jobs:
       - name: Install Skaffold
         run: |
           curl -Lo skaffold \
-            https://storage.googleapis.com/skaffold/releases/v${{ env.SKAFFOLD_VERSION }}/skaffold-linux-amd64
+            https://storage.googleapis.com/skaffold/releases/${{ env.SKAFFOLD_VERSION }}/skaffold-linux-amd64
           chmod +x skaffold
           sudo mv skaffold /usr/local/bin/skaffold
 
