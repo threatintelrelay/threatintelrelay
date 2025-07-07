@@ -1,19 +1,40 @@
-name: CI-releases
+name: CI
 
 on:
   push:
-    branches: [ "release/*" ]
+    branches: [ "*", "*/*" ]
   pull_request:
-    branches: [ "release/*", "main" ]
+    branches: [ "*", "*/*" ]
 
 jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install test dependencies
+        run: |
+          pip install -r src/api/requirements.txt
+          pip install -r src/api/test-requirements.txt
+
+      - name: Run fastAPI unit tests
+        run: |
+          pytest src/api/tests
+
   integration-tests:
+    needs: unit-tests
     runs-on: ubuntu-latest
     env:
       IMAGE_REGISTRY: localhost:5000
       KIND_VERSION: v0.29.0
       KUBECTL_VERSION: v1.33.2
-      HELM_VERSION: 3.18.3
+      HELM_VERSION: v3.18.3
       SKAFFOLD_VERSION: v2.16.1
 
     steps:
@@ -40,7 +61,7 @@ jobs:
       - name: Install Helm
         run: |
           curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
-            | bash -s -- --version v${{ env.HELM_VERSION }}
+            | bash -s -- --version ${{ env.HELM_VERSION }}
 
       - name: Install Skaffold
         run: |
