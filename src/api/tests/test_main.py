@@ -1,14 +1,12 @@
+import os
 import pytest
-from httpx import AsyncClient
-from src.api.main import app
+import httpx
 
-import pytest
-import asyncio
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 @pytest.mark.asyncio
 async def test_root():
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    async with httpx.AsyncClient(base_url=API_URL) as ac:
         response = await ac.get("/")
     assert response.status_code == 200
-    # Optionally, check response content
-    # assert response.json() == {"message": "Hello World"}
+    assert response.json() == {"message": "ThreatIntelRelay MCP server is up!"}

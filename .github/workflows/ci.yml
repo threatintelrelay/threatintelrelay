@@ -38,7 +38,7 @@ jobs:
 
       - name: Run tests in Docker container
         run: |
-          pytest /app/tests
+          pytest tests
 
       - name: Stop and remove container
         if: always()
