@@ -3,8 +3,7 @@ name: CI-releases
 on:
   workflow_run:
     workflows: ["CI-all-branches"]
-    types:
-      - completed
+    types: [completed]
     branches:
       - release/*
       - main
@@ -13,8 +12,12 @@ jobs:
   integration-tests:
     runs-on: ubuntu-latest
     env:
-      # just the registry host—don’t include the image name here
       IMAGE_REGISTRY: localhost:5000
+      KIND_VERSION: v0.29.0
+      KUBECTL_VERSION: v1.33.2
+      HELM_VERSION: 3.18.3
+      SKAFFOLD_VERSION: v2.16.1
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,43 +27,40 @@ jobs:
 
       - name: Install Kind
         run: |
-          curl -Lo kind https://kind.sigs.k8s.io/dl/${{ env.KIND_VERSION }}/kind-linux-amd64
+          curl -Lo kind \
+            https://kind.sigs.k8s.io/dl/${{ env.KIND_VERSION }}/kind-linux-amd64
           chmod +x kind
           sudo mv kind /usr/local/bin/kind
 
       - name: Install kubectl
         run: |
-          # fetch the latest stable version number
-          K8S_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
-          curl -Lo kubectl https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/amd64/kubectl
+          curl -Lo kubectl \
+            https://dl.k8s.io/release/${{ env.KUBECTL_VERSION }}/bin/linux/amd64/kubectl
           chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
+          sudo mv kubectl /usr/local/bin/kubectl
 
       - name: Install Helm
         run: |
           curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
-            | bash
+            | bash -s -- --version v${{ env.HELM_VERSION }}
 
       - name: Install Skaffold
         run: |
           curl -Lo skaffold \
-            https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+            https://storage.googleapis.com/skaffold/releases/v${{ env.SKAFFOLD_VERSION }}/skaffold-linux-amd64
           chmod +x skaffold
-          sudo install skaffold /usr/local/bin/
+          sudo mv skaffold /usr/local/bin/skaffold
 
       - name: Create Kind cluster
         run: kind create cluster --name ci-kind
 
       - name: Initialize Skaffold Helm repositories
         run: |
-          # Let Skaffold initialize its Helm repository configuration
           skaffold config set --global collect-metrics false
-          # This will trigger Skaffold to set up any required Helm repos
           skaffold diagnose || true
 
       - name: Build & deploy with Skaffold
         run: |
-          # Add verbose logging to see what's happening
           skaffold run \
             --default-repo ${{ env.IMAGE_REGISTRY }} \
             --verbosity=debug
@@ -82,7 +82,6 @@ jobs:
 
       - name: Smoke test service
         run: |
-          # forward the HTTP port and check /health
           kubectl port-forward svc/threatintelrelay-api 8080:80 -n default &
           sleep 10
           curl --fail http://localhost:8080/health
