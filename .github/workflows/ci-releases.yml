@@ -38,11 +38,8 @@ jobs:
 
       - name: Install Helm
         run: |
-          curl -Lo helm.tar.gz \
-            https://get.helm.sh/helm-v${{ env.HELM_VERSION }}-linux-amd64.tar.gz
-          tar -zxvf helm.tar.gz
-          sudo mv linux-amd64/helm /usr/local/bin/helm
-          rm -rf linux-amd64 helm.tar.gz
+          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+            | bash
 
       - name: Install Skaffold
         run: |
