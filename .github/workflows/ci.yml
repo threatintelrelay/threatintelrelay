@@ -38,11 +38,10 @@ jobs:
 
       - name: Run tests in Docker container
         run: |
-          docker exec fastapi-test pytest tests
+          docker exec fastapi-test python -m pytest tests
 
       - name: Stop and remove container
         if: always()
         run: |
           docker stop fastapi-test
           docker rm fastapi-test
-          
