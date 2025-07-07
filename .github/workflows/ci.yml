@@ -7,26 +7,46 @@ on:
     branches: [ "*" ]
 
 jobs:
-  unit-tests:
+  fastapi-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+      - name: Build Docker image
+        run: |
+          docker build -t threatintelrelay-api:ci ./src/api
+
+      - name: Run FastAPI container
+        run: |
+          docker run -d --name fastapi-test -p 8000:8000 threatintelrelay-api:ci
+
+      - name: Wait for FastAPI to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:8000/ > /dev/null; then
+              echo "FastAPI is up!"
+              break
+            fi
+            echo "Waiting for FastAPI..."
+            sleep 2
+          done
 
       - name: Install test dependencies
         run: |
-          pip install -r src/api/test-requirements.txt
+          docker exec fastapi-test pip install --no-cache-dir -r test-requirements.txt
 
-      - name: Run unit tests
+      - name: Run tests in Docker container
         run: |
-          pytest src/api/tests
+          docker exec fastapi-test pytest tests
 
-  integration-tests:
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop fastapi-test
+          docker rm fastapi-test
+
+  cluster-tests:
     needs: unit-tests
     runs-on: ubuntu-latest
     env:

@@ -1,12 +1,16 @@
 import os
 import pytest
-import httpx
+from fastapi.testclient import TestClient
+from ..main import app
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+client = TestClient(app)
 
-@pytest.mark.asyncio
-async def test_root():
-    async with httpx.AsyncClient(base_url=API_URL) as ac:
-        response = await ac.get("/")
+def test_root():
+    response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "ThreatIntelRelay MCP server is up!"}
+
+def test_health_check():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
