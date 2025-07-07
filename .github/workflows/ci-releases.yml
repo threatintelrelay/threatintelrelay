@@ -50,6 +50,13 @@ jobs:
       - name: Create Kind cluster
         run: kind create cluster --name ci-kind
 
+      - name: Initialize Skaffold Helm repositories
+        run: |
+          # Let Skaffold initialize its Helm repository configuration
+          skaffold config set --global collect-metrics false
+          # This will trigger Skaffold to set up any required Helm repos
+          skaffold diagnose || true
+
       - name: Build & deploy with Skaffold
         run: |
           # Add verbose logging to see what's happening
