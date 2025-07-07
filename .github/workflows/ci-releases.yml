@@ -52,12 +52,20 @@ jobs:
 
       - name: Build & deploy with Skaffold
         run: |
-          # this will:
-          #   1) docker-build your images
-          #   2) load them straight into the Kind cluster
-          #   3) helm-deploy via your skaffold.yaml
+          # Add verbose logging to see what's happening
           skaffold run \
-            --default-repo ${{ env.IMAGE_REGISTRY }}
+            --default-repo ${{ env.IMAGE_REGISTRY }} \
+            --verbosity=debug
+
+      - name: Debug deployment state
+        if: failure()
+        run: |
+          echo "=== Pods ==="
+          kubectl get pods -A
+          echo "=== Services ==="
+          kubectl get svc -A
+          echo "=== Events ==="
+          kubectl get events --sort-by='.lastTimestamp' -A
 
       - name: Wait for rollout
         run: |
