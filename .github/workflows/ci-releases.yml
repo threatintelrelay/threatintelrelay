@@ -38,14 +38,10 @@ jobs:
         with:
           version: '3.11.1'
 
-      - name: Set up Skaffold
-        uses: heypigeonhq/setup-skaffold@v1.1.0
+      - uses: heypigeonhq/setup-skaffold@v1.1.0
         with:
           version: 'latest'
-
-      # --- make Skaffold load images directly into Kind rather than push/pull ---
-      - name: Enable Skaffold “local-cluster” mode
-        run: skaffold config set --global local-cluster true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Kind cluster
         run: kind create cluster --name ci-kind
