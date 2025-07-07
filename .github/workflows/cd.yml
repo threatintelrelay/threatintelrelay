@@ -2,11 +2,12 @@ name: CD-images
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ "main" ]
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build-test-push:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io/${{ github.repository_owner }}
@@ -15,34 +16,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Placeholder step
-        run: echo "This is a placeholder step. Replace with actual steps as needed."
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Log in to GitHub Container Registry
-      #   uses: docker/login-action@v3
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable={{is_default_branch}}
 
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: ./src/api
-      #     file: ./src/api/Dockerfile
-      #     push: true
-      #     tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-      # - name: Update Helm values (optional)
-      #   run: |
-      #     # sed or yq to update image tag in Helm values if needed
-      #     echo "Update Helm values with new image tag if required"
-
-      # - name: Commit and push Helm values (optional)
-      #   run: |
-      #     # git commit -am "Update image tag" && git push
-      #     echo "Push updated Helm values if required"
-      #   if: false # Set to true if you update and push Helm values
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/api
+          file: ./src/api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
