@@ -5,6 +5,8 @@ description: Set up a local development environment for ThreatIntelRelay.
 
 Follow these steps to run the project locally:
 
+> **Note**: ThreatIntelRelay is a work in progress. The development environment may change frequently as features are added.
+
 1. **Start a local registry**
 
 ```bash
