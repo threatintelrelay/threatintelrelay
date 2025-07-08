@@ -101,9 +101,9 @@ jobs:
 
       - name: Smoke test service
         run: |
-          kubectl port-forward svc/threatintelrelay-api 8080:80 -n default &
+          kubectl port-forward svc/fastapi-app-api 8000:80 -n fastapi-app &
           sleep 10
-          curl --fail http://localhost:8080/health
+          curl --fail http://localhost:8000/health
 
       - name: Delete Kind cluster
         if: always()
