@@ -6,6 +6,6 @@ RUN pip install --no-cache-dir -r /requirements.txt && pip install --no-cache-di
 
 # copy DAGs & plugins into the image
 COPY ./dags /opt/airflow/dags
-COPY ./plugins /opt/airflow/plugins
+# COPY ./plugins /opt/airflow/plugins
 
 # (optional) add entrypoint hooks, healthchecks, etc.
