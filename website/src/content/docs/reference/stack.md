@@ -20,3 +20,5 @@ ThreatIntelRelay uses the following open-source tools:
 - **Observability**: OpenTelemetry -> Prometheus + Grafana + Loki + Tempo
 - **CI/CD & supply chain**: GitHub Actions + Argo CD
 - **Policy and runtime hardening**: Kyverno + Falco
+
+This stack represents the planned architecture. ThreatIntelRelay is still being built, so expect changes as the MCP-based interface for AI agents takes shape.
