@@ -73,10 +73,8 @@ jobs:
       - name: Create Kind cluster
         run: kind create cluster --name ci-kind
 
-      - name: Add Helm repositories
-        run: |
-          helm repo add kong https://charts.konghq.com
-          helm repo update
+      - name: Build Helm dependencies
+        run: helm dependency build deployment/helm/threatintelrelay/
 
       - name: Initialize Skaffold Helm repositories
         run: |
