@@ -5,5 +5,8 @@ dependencies:
 - name: kong
   repository: https://charts.konghq.com
   version: 2.37.0
-digest: sha256:4c11cb3699d290cf06d62841b38ad3e8ba2903ee37ecfb4acf1a950a01f98a7a
-generated: "2025-07-06T22:48:28.490325573-07:00"
+- name: airflow
+  repository: https://airflow-helm.github.io/charts
+  version: 8.9.0
+digest: sha256:d449751a8a89772fb189672c5f07fc99b5797d1c2ed945dd783852acefb802f2
+generated: "2025-07-07T14:45:40.53436135-07:00"
