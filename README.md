@@ -49,3 +49,7 @@ Ensure these tools are installed and available in your PATH.
    Skaffold watches the source code and automatically rebuilds and deploys on changes.
 
 The API will be available through the Kong ingress controller once the chart is deployed.
+
+** Create Docker network **
+
+docker network create threatintel-network

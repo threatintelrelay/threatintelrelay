@@ -20,7 +20,8 @@ deploy:
         namespace: default
         valuesFiles:
           - deployment/helm/threatintelrelay/charts/api/values.yaml
-          - deployment/helm/threatintelrelay/values.yaml
+          - deployment/helm/threatintelrelay/airflow-values.yaml
+          - deployment/helm/threatintelrelay/kong-values.yaml
         setValueTemplates:
           api.image.repository: "{{.IMAGE_REPO_localhost_5000_threatintelrelay_api}}"
           api.image.tag: "{{.IMAGE_TAG_localhost_5000_threatintelrelay_api}}"
