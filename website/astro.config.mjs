@@ -6,7 +6,7 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
                starlight({
-                       title: 'ThreatIntelRelay Docs',
+                       title: 'ThreatIntelRelay',
                        social: [
                                { icon: 'github', label: 'GitHub', href: 'https://github.com/threatintelrelay/threatintelrelay' },
                        ],
