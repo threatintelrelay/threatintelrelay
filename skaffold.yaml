@@ -54,3 +54,9 @@ deploy:
           airflow.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_airflow}}"
         setValues:
           airflow.image.pullPolicy: "IfNotPresent"
+
+      - name: keycloak
+        namespace: keycloak
+        remoteChart: keycloak
+        repo: https://charts.bitnami.com/bitnami
+        valuesFiles: [deployment/helm/keycloak-values.yaml]

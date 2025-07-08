@@ -1,21 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fastapi-ingress
-  namespace: fastapi-app
+  name: airflow-ingress
+  namespace: airflow
   annotations:
     kubernetes.io/ingress.class: "kong"
-    konghq.com/plugins: oidc-fastapi
+    konghq.com/plugins: oidc-airflow
 spec:
   ingressClassName: kong
   rules:
-    - host: api.localdev.me
+    - host: airflow.localdev.me
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: {{ include "api.fullname" . }}
+                name: airflow-web
                 port:
-                  number: 80
+                  number: 8080
