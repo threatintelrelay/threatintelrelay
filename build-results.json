@@ -1,0 +1,1 @@
+{"builds":[{"imageName":"localhost:5000/threatintelrelay-api","tag":"localhost:5000/threatintelrelay-api:335da2e01dabe10718d2c3407b4cd4c527fdf4d12cac65773151d4c6b0d25330"},{"imageName":"localhost:5000/threatintelrelay-airflow","tag":"localhost:5000/threatintelrelay-airflow:afc9b4093842e3b8b04b3f53bcf45df1847cb0a443663b17f10a7bfae993a5f6"}]}

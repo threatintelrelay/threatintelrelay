@@ -1,12 +1,10 @@
+# kind-config.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-networking:
-  network: threatintel-network
 nodes:
-  - role: control-plane
-    image: kindest/node:v1.30.0
-  - role: worker
+- role: control-plane
+  image: kindest/node:v1.30.0
 containerdConfigPatches:
-  - |-
-    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:5000"]
-      endpoint = ["http://kind-registry:5000"]
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:5000"]
+    endpoint = ["http://kind-registry:5000"]
