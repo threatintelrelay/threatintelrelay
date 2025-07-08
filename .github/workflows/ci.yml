@@ -21,7 +21,7 @@ jobs:
       - name: Install test dependencies
         run: |
           pip install -r src/api/requirements.txt
-          pip install -r src/api/test-requirements.txt
+          pip install -r src/test-requirements.txt
 
       - name: Run fastAPI unit tests
         run: |
@@ -73,11 +73,15 @@ jobs:
       - name: Create Kind cluster
         run: kind create cluster --name ci-kind
 
+      - name: Create namespaces
+        run: |
+          chmod +x deployment/scripts/create-namespaces.sh
+          ./deployment/scripts/create-namespaces.sh
+
       - name: Add Helm repositories
         run: |
-          helm repo add kong https://charts.konghq.com
-          helm repo add airflow https://airflow-helm.github.io/charts
-          helm repo update
+          chmod +x deployment/scripts/add-helm-repos.sh
+          ./deployment/scripts/add-helm-repos.sh
 
       - name: Initialize Skaffold Helm repositories
         run: |

@@ -1,0 +1,6 @@
+dependencies:
+- name: api
+  repository: file://charts/api
+  version: 0.1.0
+digest: sha256:d35b65f270eadc199a54e8720a932b4b1f4b4ac0e1f09609889fc32e74eb0098
+generated: "2025-07-08T12:08:46.230188043-07:00"
