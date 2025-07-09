@@ -1,0 +1,22 @@
+auth:
+  adminUser: admin
+  adminPassword: supersecret
+
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: pg_root_password
+    username: bn_keycloak
+    password: keycloak_db_password
+    database: bitnami_keycloak
+
+
+ingress:
+  enabled: true
+  ingressClassName: kong
+  hostname: auth.localdev.me
+  pathType: ImplementationSpecific
+  path: /
+  annotations:
+    kubernetes.io/ingress.class: kong
+  tls: false 

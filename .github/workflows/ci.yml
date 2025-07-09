@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [ "*", "*/*" ]
+  pull_request:
+    branches: [ "*", "*/*" ]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install test dependencies
+        run: |
+          pip install -r src/api/requirements.txt
+          pip install -r src/test-requirements.txt
+
+      - name: Run fastAPI unit tests
+        run: |
+          pytest src/api/tests
+
+  integration-tests:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REGISTRY: localhost:5000
+      KIND_VERSION: v0.29.0
+      KUBECTL_VERSION: v1.33.2
+      HELM_VERSION: v3.18.3
+      SKAFFOLD_VERSION: v2.16.1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Kind
+        run: |
+          curl -Lo kind \
+            https://kind.sigs.k8s.io/dl/${{ env.KIND_VERSION }}/kind-linux-amd64
+          chmod +x kind
+          sudo mv kind /usr/local/bin/kind
+
+      - name: Install kubectl
+        run: |
+          curl -Lo kubectl \
+            https://dl.k8s.io/release/${{ env.KUBECTL_VERSION }}/bin/linux/amd64/kubectl
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/kubectl
+
+      - name: Install Helm
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+            | bash -s -- --version ${{ env.HELM_VERSION }}
+
+      - name: Install Skaffold
+        run: |
+          curl -Lo skaffold \
+            https://storage.googleapis.com/skaffold/releases/${{ env.SKAFFOLD_VERSION }}/skaffold-linux-amd64
+          chmod +x skaffold
+          sudo mv skaffold /usr/local/bin/skaffold
+
+      - name: Create Kind cluster
+        run: kind create cluster --name ci-kind
+
+      - name: Create namespaces
+        run: |
+          chmod +x deployment/scripts/create-namespaces.sh
+          ./deployment/scripts/create-namespaces.sh
+
+      - name: Add Helm repositories
+        run: |
+          chmod +x deployment/scripts/add-helm-repos.sh
+          ./deployment/scripts/add-helm-repos.sh
+
+      - name: Initialize Skaffold Helm repositories
+        run: |
+          skaffold config set --global collect-metrics false
+          skaffold diagnose || true
+
+      - name: Build & deploy with Skaffold
+        run: |
+          skaffold run \
+            --default-repo ${{ env.IMAGE_REGISTRY }} \
+            --verbosity=debug
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/fastapi-app-api \
+            -n fastapi-app --timeout=120s
+
+      - name: Smoke test service
+        run: |
+          kubectl port-forward svc/fastapi-app-api 8000:80 -n fastapi-app &
+          sleep 10
+          curl --fail http://localhost:8000/health
+
+      - name: Delete Kind cluster
+        if: always()
+        run: kind delete cluster --name ci-kind

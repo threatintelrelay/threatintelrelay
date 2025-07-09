@@ -1,0 +1,62 @@
+apiVersion: skaffold/v4beta10
+kind: Config
+metadata:
+  name: threatintelrelay
+build:
+  tagPolicy:
+    gitCommit: {}
+  artifacts:
+    - image: localhost:5000/tir-api
+      context: src/api
+      docker:
+        dockerfile: Dockerfile
+    - image: localhost:5000/tir-airflow
+      context: src/pipelines
+      docker:
+        dockerfile: Dockerfile
+  local:
+    push: false
+deploy:
+  helm:
+    releases:
+      - name: minio-operator
+        chartPath: deployment/helm/minio-operator
+        namespace: minio
+        valuesFiles:
+          - deployment/helm/minio-operator/values.yaml
+      - name: minio-tenant
+        chartPath: deployment/helm/minio-tenant
+        namespace: minio
+        valuesFiles:
+          - deployment/helm/minio-tenant/values.yaml
+
+      - name: kong
+        chartPath: deployment/helm/kong
+        namespace: kong
+        valuesFiles: [deployment/helm/kong-values.yaml]
+
+      - name: fastapi-app
+        chartPath: deployment/helm/fastapi-app
+        namespace: fastapi-app
+        valuesFiles: [deployment/helm/fastapi-app-values.yaml]
+        setValueTemplates:
+          api.image.repository: "{{.IMAGE_REPO_localhost_5000_tir_api}}"
+          api.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_api}}"
+        setValues:
+          api.image.pullPolicy: "IfNotPresent"
+
+      - name: airflow
+        chartPath: deployment/helm/airflow
+        namespace: airflow
+        valuesFiles: [deployment/helm/airflow-values.yaml]
+        setValueTemplates:
+          airflow.image.repository: "{{.IMAGE_REPO_localhost_5000_tir_airflow}}"
+          airflow.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_airflow}}"
+        setValues:
+          airflow.image.pullPolicy: "IfNotPresent"
+
+      - name: keycloak
+        namespace: keycloak
+        remoteChart: keycloak
+        repo: https://charts.bitnami.com/bitnami
+        valuesFiles: [deployment/helm/keycloak-values.yaml]
