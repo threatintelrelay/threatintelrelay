@@ -27,7 +27,7 @@ jobs:
       - name: Run fastAPI tests
         run: |
           pytest src/api/tests
-          bandit -c bandit.yaml -r .
+          bandit -c src/api/bandit.yaml -r src/api/
 
       - name: Run Airflow pipeline tests
         run: |
