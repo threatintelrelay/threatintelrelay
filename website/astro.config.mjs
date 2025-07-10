@@ -12,15 +12,16 @@ export default defineConfig({
                        ],
                        sidebar: [
                                {
-                                       label: 'User Guides',
+                                       label: 'Users',
                                        items: [
                                                { label: 'Example Guide', slug: 'user_guides/example' },
                                        ],
                                },
                                 {
-                                        label: 'Developer Guides',
+                                        label: 'Developers',
                                         items: [
                                                 { label: 'Quickstart', slug: 'dev_guides/quickstart' },
+                                                { label: 'Dev Security Tools', slug: 'dev_guides/security_tools' },
                                         ],
                                 },
                                {

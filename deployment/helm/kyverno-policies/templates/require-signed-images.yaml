@@ -1,0 +1,25 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-sigstore-verify
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: verify-cosign-signature
+      match:
+        resources:
+          kinds:
+            - Pod
+      verifyImages:
+        - image: "ghcr.io/threatintelrelay/*"
+          attestors:
+            - count: 1
+              entries:
+                - keyless:
+                    subject: "https://github.com/threatintelrelay/threatintelrelay/.github/workflows/CD-images.yml@refs/heads/main"
+                    issuer: "https://token.actions.githubusercontent.com"
+                - keyless:
+                    subject: "https://github.com/threatintelrelay/threatintelrelay/.github/workflows/CD-images.yml@refs/heads/release/*"
+                    issuer: "https://token.actions.githubusercontent.com"
+

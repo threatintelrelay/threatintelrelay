@@ -2,7 +2,7 @@ name: CD-images
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "release/**" ]
     tags:
       - 'v*.*.*'
 
@@ -30,14 +30,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Determine Docker image tag
+        id: set_tag
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            TAG="${GITHUB_REF#refs/tags/v}"
+          elif [[ "${GITHUB_REF}" == refs/heads/main ]]; then
+            TAG="latest"
+          elif [[ "${GITHUB_REF}" =~ ^refs/heads/release/(.*)$ ]]; then
+            TAG="${BASH_REMATCH[1]}-rc1"
+          else
+            TAG="dev"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=raw,value=latest,enable={{is_default_branch}}
+          tags: ${{ steps.set_tag.outputs.tag }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -47,3 +59,32 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate SBOM
+        run: |
+          IMAGE_REF=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }}
+          syft $IMAGE_REF -o cyclonedx-json > sbom.json
+
+      - name: Install Cosign
+        run: |
+          COSIGN_VERSION=$(curl -s https://api.github.com/repos/sigstore/cosign/releases/latest | jq -r .tag_name)
+          curl -Lo cosign https://github.com/sigstore/cosign/releases/download/${COSIGN_VERSION}/cosign-linux-amd64
+          chmod +x cosign
+          sudo mv cosign /usr/local/bin/
+
+      - name: Cosign sign image (OIDC keyless)
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: |
+          IMAGE_REF=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }}
+          cosign sign --yes $IMAGE_REF
+
+      - name: Cosign sign SBOM (OIDC keyless)
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: |
+          cosign sign-blob --yes sbom.json
