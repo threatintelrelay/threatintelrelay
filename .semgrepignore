@@ -1,0 +1,1 @@
+deployment/helm/minio-operator/templates/minio.min.io_tenants.yaml
