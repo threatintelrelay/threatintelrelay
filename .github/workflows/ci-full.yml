@@ -52,11 +52,6 @@ jobs:
       - name: Create Kind cluster
         run: kind create cluster --name ci-kind
 
-      - name: Create namespaces
-        run: |
-          chmod +x deployment/scripts/create-namespaces.sh
-          ./deployment/scripts/create-namespaces.sh
-
       - name: Add Helm repositories
         run: |
           chmod +x deployment/scripts/add-helm-repos.sh
