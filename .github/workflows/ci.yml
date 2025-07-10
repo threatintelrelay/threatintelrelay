@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Airflow pipeline tests
         run: |
-          bandit -c bandit.yaml -r .
+          bandit -c src/pipelines/bandit.yaml -r src/pipelines/
 
   integration-tests:
     needs: unit-tests
