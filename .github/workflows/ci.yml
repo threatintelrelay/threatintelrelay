@@ -21,11 +21,17 @@ jobs:
       - name: Install test dependencies
         run: |
           pip install -r src/api/requirements.txt
+          pip install -r src/pipeline/requirements.txt
           pip install -r src/test-requirements.txt
 
-      - name: Run fastAPI unit tests
+      - name: Run fastAPI tests
         run: |
           pytest src/api/tests
+          bandit -c bandit.yaml -r .
+
+      - name: Run Airflow pipeline tests
+        run: |
+          bandit -c bandit.yaml -r .
 
   integration-tests:
     needs: unit-tests
