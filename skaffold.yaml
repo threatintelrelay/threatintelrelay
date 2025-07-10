@@ -19,21 +19,37 @@ build:
 deploy:
   helm:
     releases:
+      - name: kyverno
+        namespace: kyverno
+        remoteChart: kyverno
+        repo: https://kyverno.github.io/kyverno
+        valuesFiles: [deployment/helm/kyverno-values.yaml]
+        createNamespace: true
+
+      - name: kyverno-policies
+        namespace: kyverno
+        chartPath: deployment/helm/kyverno-policies
+        valuesFiles: [deployment/helm/kyverno-policies-values.yaml]
+        createNamespace: true
+
       - name: minio-operator
         chartPath: deployment/helm/minio-operator
         namespace: minio
         valuesFiles:
           - deployment/helm/minio-operator/values.yaml
+        createNamespace: true
       - name: minio-tenant
         chartPath: deployment/helm/minio-tenant
         namespace: minio
         valuesFiles:
           - deployment/helm/minio-tenant/values.yaml
+        createNamespace: true
 
       - name: kong
         chartPath: deployment/helm/kong
         namespace: kong
         valuesFiles: [deployment/helm/kong-values.yaml]
+        createNamespace: true
 
       - name: fastapi-app
         chartPath: deployment/helm/fastapi-app
@@ -44,6 +60,7 @@ deploy:
           api.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_api}}"
         setValues:
           api.image.pullPolicy: "IfNotPresent"
+        createNamespace: true
 
       - name: airflow
         chartPath: deployment/helm/airflow
@@ -54,9 +71,80 @@ deploy:
           airflow.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_airflow}}"
         setValues:
           airflow.image.pullPolicy: "IfNotPresent"
+        createNamespace: true
 
       - name: keycloak
         namespace: keycloak
         remoteChart: keycloak
         repo: https://charts.bitnami.com/bitnami
         valuesFiles: [deployment/helm/keycloak-values.yaml]
+        createNamespace: true
+
+profiles:
+  - name: policy-init
+    deploy:
+      helm:
+        releases:
+          - name: kyverno
+            namespace: kyverno
+            remoteChart: kyverno
+            repo: https://kyverno.github.io/kyverno
+            valuesFiles: [deployment/helm/kyverno-values.yaml]
+            createNamespace: true
+
+          - name: kyverno-policies
+            namespace: kyverno
+            chartPath: deployment/helm/kyverno-policies
+            valuesFiles: [deployment/helm/kyverno-policies-values.yaml]
+            createNamespace: true
+  
+  - name: service-stack
+    deploy:
+      helm:
+        releases:
+          - name: minio-operator
+            chartPath: deployment/helm/minio-operator
+            namespace: minio
+            valuesFiles: [deployment/helm/minio-operator/values.yaml]
+            createNamespace: true
+
+          - name: minio-tenant
+            chartPath: deployment/helm/minio-tenant
+            namespace: minio
+            valuesFiles: [deployment/helm/minio-tenant/values.yaml]
+            createNamespace: true
+
+          - name: kong
+            chartPath: deployment/helm/kong
+            namespace: kong
+            valuesFiles: [deployment/helm/kong-values.yaml]
+            createNamespace: true
+
+          - name: fastapi-app
+            chartPath: deployment/helm/fastapi-app
+            namespace: fastapi-app
+            valuesFiles: [deployment/helm/fastapi-app-values.yaml]
+            setValueTemplates:
+              api.image.repository: "{{.IMAGE_REPO_localhost_5000_tir_api}}"
+              api.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_api}}"
+            setValues:
+              api.image.pullPolicy: "IfNotPresent"
+            createNamespace: true
+
+          - name: airflow
+            chartPath: deployment/helm/airflow
+            namespace: airflow
+            valuesFiles: [deployment/helm/airflow-values.yaml]
+            setValueTemplates:
+              airflow.image.repository: "{{.IMAGE_REPO_localhost_5000_tir_airflow}}"
+              airflow.image.tag: "{{.IMAGE_TAG_localhost_5000_tir_airflow}}"
+            setValues:
+              airflow.image.pullPolicy: "IfNotPresent"
+            createNamespace: true
+
+          - name: keycloak
+            namespace: keycloak
+            remoteChart: keycloak
+            repo: https://charts.bitnami.com/bitnami
+            valuesFiles: [deployment/helm/keycloak-values.yaml]
+            createNamespace: true

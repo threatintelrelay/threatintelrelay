@@ -16,6 +16,9 @@ helm repo add stable https://charts.helm.sh/stable
 echo "Adding MinIO Operator Helm repo..."
 helm repo add minio-operator https://operator.min.io
 
+echo "Adding Kyverno Helm repo..."
+helm repo add kyverno https://kyverno.github.io/kyverno
+
 echo "Updating all Helm repos..."
 helm repo update
 
