@@ -1,4 +1,4 @@
-FROM apache/airflow:2.8.4-python3.9
+FROM apache/airflow:3.0.2-python3.9
 
 # install your DAGs' dependencies
 COPY ./requirements.txt /requirements.txt
