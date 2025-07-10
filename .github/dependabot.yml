@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "src/api"
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "pip"
+    directory: "src/pipelines"
+    schedule:
+      interval: "daily" 
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "src/api"             
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "src/pipelines"             
+    schedule:
+      interval: "weekly"
