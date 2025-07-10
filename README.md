@@ -52,7 +52,7 @@ The project relies on local Kubernetes with [Kind](https://kind.sigs.k8s.io/) an
    ```
 5. Start Skaffold in dev mode to build and deploy the services:
    ```bash
-   skaffold dev
+   skaffold dev -p service-stack
    ```
 
 When Skaffold completes, the FastAPI app is reachable at `https://api.localdev.me`.
