@@ -1,14 +1,14 @@
 ---
-title: ThreatIntelRelay
+title: Threat Intel Relay
 description: Access multiple OSINT threat feeds through an MCP server.
 template: splash
 hero:
-  tagline: Aggregating OSINT feeds with a unified MCP API
+  tagline: Unified OSINT threat feeds for AI agents.
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/threatintelrelay_logo.svg
   actions:
     - text: Quickstart
-      link: /guides/quickstart/
+      link: /dev_guides/quickstart/
       icon: right-arrow
     - text: GitHub
       link: https://github.com/threatintelrelay/threatintelrelay
@@ -18,13 +18,13 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-ThreatIntelRelay consolidates multiple open-source threat feeds and exposes them through a single MCP-compatible API. The service is deployed on Kubernetes and uses FastAPI for its HTTP interface.
+We are on a mission to make OSINT threat intelligence effortlessly accessible to AI, ThreatIntelRelay aggregates and normalizes diverse feeds into a consistent MCP API, accelerating autonomous threat detection and response.
 
 **Work in progress:** The project is actively being developed and many of the features documented here are still experimental. The end goal is to provide Model Context Protocol endpoints so that AI agents can easily consume OSINT threat intelligence in a consistent format.
 
 <CardGrid stagger>
   <Card title="Quickstart" icon="rocket">
-    Learn how to run the project locally in the [Quickstart guide](/guides/quickstart/).
+    Learn how to run the project locally in the [Quickstart guide](/dev_guides/quickstart/).
   </Card>
   <Card title="Stack Overview" icon="layers">
     Explore the technologies used in [the stack reference](/reference/stack/).

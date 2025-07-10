@@ -6,18 +6,23 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
                starlight({
-                       title: 'ThreatIntelRelay',
+                       title: 'Threat Intel Relay',
                        social: [
                                { icon: 'github', label: 'GitHub', href: 'https://github.com/threatintelrelay/threatintelrelay' },
                        ],
                        sidebar: [
                                {
-                                       label: 'Guides',
+                                       label: 'User Guides',
                                        items: [
-                                               { label: 'Quickstart', slug: 'guides/quickstart' },
-                                               { label: 'Example Guide', slug: 'guides/example' },
+                                               { label: 'Example Guide', slug: 'user_guides/example' },
                                        ],
                                },
+                                {
+                                        label: 'Developer Guides',
+                                        items: [
+                                                { label: 'Quickstart', slug: 'dev_guides/quickstart' },
+                                        ],
+                                },
                                {
                                        label: 'Reference',
                                        autogenerate: { directory: 'reference' },
