@@ -1,40 +1,13 @@
-name: CI
+name: CI-full
 
 on:
-  push:
-    branches: [ "*", "*/*" ]
   pull_request:
-    branches: [ "*", "*/*" ]
+    branches: [ "main" ]
+  workflow_dispatch:
+    
 
 jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-
-      - name: Install test dependencies
-        run: |
-          pip install -r src/api/requirements.txt
-          pip install -r src/pipelines/requirements.txt
-          pip install -r src/test-requirements.txt
-
-      - name: Run fastAPI tests
-        run: |
-          pytest src/api/tests
-          bandit -c src/api/bandit.yaml -r src/api/
-
-      - name: Run Airflow pipeline tests
-        run: |
-          bandit -c src/pipelines/bandit.yaml -r src/pipelines/
-
   integration-tests:
-    needs: unit-tests
     runs-on: ubuntu-latest
     env:
       IMAGE_REGISTRY: localhost:5000

@@ -32,5 +32,5 @@ def test_default_args():
 
 
 def test_schedule_and_catchup():
-    assert dag.schedule_interval == "@daily", f"Expected schedule_interval '@daily', got {dag.schedule_interval}"  # nosec
+    assert dag.schedule == "@daily", f"Expected schedule '@daily', got {dag.schedule}"  # nosec
     assert not dag.catchup, f"Expected catchup False, got {dag.catchup}"  # nosec
