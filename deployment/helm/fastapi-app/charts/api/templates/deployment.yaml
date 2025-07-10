@@ -36,3 +36,8 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+
+  securityContext:
+    runAsNonRoot: true
