@@ -20,7 +20,7 @@ with DAG(
     'dummy_test_dag',
     default_args=default_args,
     description='A simple dummy DAG for testing',
-    schedule_interval='@daily',  # or use timedelta(days=1)
+    schedule='@daily',  # or use timedelta(days=1)
     catchup=False,
 ) as dag:
 

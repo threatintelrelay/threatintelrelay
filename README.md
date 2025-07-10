@@ -1,6 +1,6 @@
-# ThreatIntelRelay
+# Threat Intel Relay
 
-ThreatIntelRelay aims to expose multiple open-source threat feeds over a Model Context Protocol (MCP) API. The stack below illustrates the overall scheme. **This repository is a work in progress and many components are still experimental.**
+The Threat Intel Relay aims to expose multiple open-source threat feeds over a Model Context Protocol (MCP) API. The stack below illustrates the overall scheme. **This repository is a work in progress and many components are still experimental.**
 
 ## Architecture
 
