@@ -219,3 +219,5 @@ yarn-error.log*
 pnpm-debug.log*
 
 build-results.json
+
+leaks.json

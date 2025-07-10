@@ -28,13 +28,13 @@ airflow:
   ## - use this command to generate your own fernet key:
   ##   python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)"
   ##
-  fernetKey: "7T512UXSSmBOkpWimFHIVb8jK6lfmSAvx4mO6Arehnc="
+  fernetKey: ""
 
   ## the secret_key for flask (sets `AIRFLOW__WEBSERVER__SECRET_KEY`)
   ## - [WARNING] you must change this value to ensure the security of your airflow
   ## - set `AIRFLOW__WEBSERVER__SECRET_KEY` with `airflow.extraEnv` from a Secret to avoid storing this in your values
   ##
-  webserverSecretKey: "THIS IS UNSAFE!"
+  webserverSecretKey: ""
 
   ## environment variables for airflow configs
   ## - airflow env-vars are structured: "AIRFLOW__{config_section}__{config_name}"
@@ -243,7 +243,17 @@ airflow:
   ## - spec for EnvVar:
   ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#envvar-v1-core
   ##
-  extraEnv: []
+  extraEnv:
+    - name: AIRFLOW__CORE__FERNET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: airflow-secret
+          key: fernetKey
+    - name: AIRFLOW__WEBSERVER__SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: airflow-secret
+          key: webserverSecretKey
 
   ## extra containers for the airflow Pods
   ## - spec for Container:
@@ -857,16 +867,6 @@ web:
     enabled: false
 
     ## the `apiVersion` to use for PodDisruptionBudget resources
-    ## - for Kubernetes 1.21 and later: "policy/v1"
-    ## - for Kubernetes 1.20 and before: "policy/v1beta1"
-    ##
-    apiVersion: policy/v1
-
-    ## the maximum unavailable pods/percentage for the web Deployment
-    ##
-    maxUnavailable: ""
-
-    ## the minimum available pods/percentage for the web Deployment
     ##
     minAvailable: ""
 

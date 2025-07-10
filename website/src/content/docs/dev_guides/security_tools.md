@@ -17,9 +17,9 @@ If you have questions or spot an opportunity for improvement, your feedback is a
 
 | Area                        | Technology / Tool         | What It Does                                    |
 |-----------------------------|--------------------------|-------------------------------------------------|
-| **Static Code Analysis**    | Bandit          | Detects code-level security bugs and bad patterns  |
+| **Static Code Analysis**    | Bandit                   | Detects code-level security bugs and bad patterns  |
 | **Secrets Scanning**        | git-secrets, TruffleHog, Gitleaks | Prevents sensitive secrets in code/repos   |
-| **Dependency Scanning**     | Dependabot, Snyk, Safety | Finds vulnerabilities in 3rd-party libraries     |
+| **Dependency Scanning**     | Dependabot               | Finds vulnerabilities in 3rd-party libraries     |
 | **Container Image Scanning**| Trivy, Grype, Clair      | Finds OS/app vuln in Docker images               |
 | **SBOM Generation**         | Syft                     | Produces a Software Bill of Materials for images |
 | **Artifact Signing**        | Cosign                   | Signs images and SBOMs to prevent tampering      |
@@ -132,41 +132,6 @@ If you have questions or spot an opportunity for improvement, your feedback is a
 - **How to work with it:**  
   - Watch for PRs from Dependabot.
   - Review, test, and merge PRs to stay secure.
-
----
-
-### **Snyk**
-
-- **What is it?**  
-  Snyk scans for vulnerabilities in application dependencies (Python, JS, etc.).
-
-- **Why do we use it?**  
-  To identify vulnerabilities in open-source packages with context and remediation advice.
-
-- **How to work with it:**  
-  - Snyk is integrated in CI and can be run locally:
-    ```sh
-    snyk test
-    ```
-  - Follow Snyk’s recommendations to upgrade or patch dependencies.
-
----
-
-### **Safety**
-
-- **What is it?**  
-  Safety checks Python dependencies against a database of known security issues.
-
-- **Why do we use it?**  
-  To provide another layer of vulnerability detection for Python libraries.
-
-- **How to work with it:**  
-  - Safety runs in CI.
-  - You can also run locally:
-    ```sh
-    safety check
-    ```
-  - Update requirements as prompted.
 
 ---
 
