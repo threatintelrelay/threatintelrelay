@@ -2,7 +2,7 @@ name: CD-images
 
 on:
   push:
-    branches: [ "main", "release/**" ]
+    branches: [ "release/**" ]
     tags:
       - 'v*.*.*'
 
@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   build-push:
+    environment: images
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io/${{ github.repository_owner }}
